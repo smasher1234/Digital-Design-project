@@ -1,0 +1,16 @@
+
+*.db
+*.ipch
+*.exe
+*.ilk
+*.obj
+*.tlog
+*.pdb
+*.log
+*.recipe
+*.db
+*.db
+*.idb
+Digital project/.vs/Digital project/v16/.suo
+Digital project/.vs/Digital project/v16/Browse.VC.db
+Digital project/Debug/Digital project.vcxproj.FileListAbsolute.txt
