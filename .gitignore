@@ -19,3 +19,8 @@ Digital project/.vs/Digital project/v16/Browse.VC.db
 Digital project/.vs/Digital project/v16/ipch/AutoPCH/34ff5e26a24235b0/DIGITAL PROJECT.ipch
 Digital project/Debug/Digital project.exe
 Digital project/.vs/Digital project/v16/Browse.VC.db
+Digital project/.vs/Digital project/v16/Browse.VC.db-shm
+Digital project/.vs/Digital project/v16/Browse.VC.db-wal
+Digital project/.vs/Digital project/v16/Browse.VC.opendb
+*.VC.db
+*.suo
