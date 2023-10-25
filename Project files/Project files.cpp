@@ -2,19 +2,48 @@
 //
 
 #include <iostream>
+using namespace std;
+//#include <Implicant.h>
 
+string convert_decimal_to_binary(int decimal, int &length);
 int main()
 {
-    std::cout << "Hello Wrld f!\n";
+    //test random decimal and its value
+    int deci;
+    int size;
+    cin >> deci;
+    cin >> size;
+    cout << convert_decimal_to_binary(deci, size);
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
+
+//a utility function that converts a decimal (minterm) to a binary
+string convert_decimal_to_binary(int decimal, int& length)
+{
+    //check if the decimal is larger than the size
+    if (decimal >= pow(2, length)) {
+
+        return "Error: Decimal too large or length is incorrect";
+    }
+    //create a binary_rep string to store the output
+    string binary_rep = "";
+    //loop inversely on the decimal
+    for (int x = length-1; x >= 0; x--) {
+        //check if the decimal is bigger than the current size, if yes that means its binart must be 1
+        if (decimal >= pow(2, x))
+        {
+            //reduce the decimal value by the added binary representation
+            decimal = decimal - pow(2, x);
+            //add 1 to the binary representation
+            binary_rep = binary_rep+ '1';
+        }
+        //if not, then it must be 0 and no reduction happens
+        else {
+            binary_rep = binary_rep+ '0';
+        }
+    }
+    //return desired binary representation string
+    return binary_rep;
+}
