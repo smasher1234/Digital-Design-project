@@ -140,7 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Implicant.cpp" />
-    <ClCompile Include="Project files.cpp" />
+    <ClCompile Include="LogicMinimization.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Implicant.h" />
