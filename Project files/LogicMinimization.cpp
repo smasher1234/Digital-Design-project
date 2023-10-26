@@ -19,7 +19,7 @@ vector<Implicant> ess_prime_imp;
 //a vector which contains all minterm but can be modified to help with finding the minterms that didn't match with any implicant
 vector<int> minterm_copy;
 int get_1_count(string binary);
-
+void add_minterm_to_prime_list(int minterm_toadd);
 
 bool is_the_expression_valid(string expression)
 {
@@ -381,6 +381,151 @@ void compare_loop_imp()
 
 }
 
+//a function that gets essential prime implicants
+void get_essential_prime_implicants()
+{
+    //index to determine the implicant which could be essential prime
+    int ess_index = 0;
+    //loop over all minterms
+    for (int x = 0; x < minterm_copy.size(); x++)
+    {
+        //couter number of times a minterm is repeated
+        int ctr = 0;
+        //loop over prime implicants
+        for (int y = 0; y < prime_imp.size(); y++)
+        {
+            //loop over the minterms the implicant have
+            for (int q = 0; q < prime_imp[y].Get_Indexes_Size(); q++)
+            {
+                //if minterm exists increase counter
+                if (prime_imp[y].Get_Indexes(q) == minterm_copy[x])
+                {
+                    ess_index = y;
+                    ctr++;
+                    //if counter is 2, this means that the minterm exists in two or more implicants so it can't be essentail
+                    if (ctr >= 2)
+                    {
+                        //break the loop 
+                        y = prime_imp.size();
+                        break;
+                    }
+                }
+            }
+            //check if the loop is about to exist, this means that if counter is 1 then there exists a prime implicant which is essentail as it has that minterm
+            if ((y + 1) == prime_imp.size())
+            {
+                if (ctr == 1)
+                {
+                    //loop over minterms the marked prime implicant have
+                    for (int q = 0; q < prime_imp[ess_index].Get_Indexes_Size(); q++)
+                    {
+                        //check if the minterm already exists, if it does, remove the minterm using its value from minterm_copy vector
+                        auto ele = find(minterm_copy.begin(), minterm_copy.end(), prime_imp[ess_index].Get_Indexes(q));
+                        //check if minterm exists in minterm_copy, if yes then remove it and adjust the loop
+                        if (ele != minterm_copy.end())
+                        {
+                            //remove minterm by value
+                            minterm_copy.erase(remove(minterm_copy.begin(), minterm_copy.end(), prime_imp[ess_index].Get_Indexes(q)), minterm_copy.end());
+                            x--;
+                        }
+                    }
+                    //found essentail prime, add to to ess_prime_imp vector
+                    ess_prime_imp.push_back(prime_imp[ess_index]);
+
+                }
+            }
+        }
+    }
+}
+//check if there are any prime implicants in the current iteration
+void check_for_prime()
+{
+    //loop over minterms
+    for (int x = 0; x < minterm_copy.size(); x++)
+    {
+        //if the next column wasn't generated (all implicants became prime)
+        if (imp2.size() == 0)
+        {
+            //add the minterm to the list of primes
+            add_minterm_to_prime_list(minterm_copy[x]);
+            //remove the minterm from the vector
+            minterm_copy.erase(minterm_copy.begin() + x);
+            x--;
+        }
+        else
+        {
+            //if column was generated, check if the minterm was included in the next column
+            for (int y = 0; y < imp2.size(); y++)
+            {
+                //loop over the implicant minterms
+                for (int q = 0; q < imp2[q].Get_Indexes_Size(); q++)
+                {
+                    //check if minterm exists, meaning implicants that have it will not be prime
+                    if (imp2[y].Get_Indexes(q) == minterm_copy[x])
+                    {
+                        //stop the 2 loops
+                        y = imp2.size();
+                        break;
+                    }
+                }
+                //check if the loop ended, if loop ended natuerally that means the minterm doesn't exist hence implicants that have it must be marked as prime
+                if ((y + 1) == imp2.size())
+                {
+                    //mark the implicant as prime
+                    add_minterm_to_prime_list(minterm_copy[x]);
+                    //reset the loop and remove minterm element
+                    minterm_copy.erase(minterm_copy.begin() + x);
+                    x--;
+                }
+            }
+        }
+    }
+}
+//add the implicant to the prime implicant vector if it has the passed minterm
+void add_minterm_to_prime_list(int minterm_toadd)
+{
+    //loop over implicants in first column
+    for (int y = 0; y < imp1.size(); y++)
+    {
+        //loop over minterms in implicant
+        for (int q = 0; q < imp1[y].Get_Indexes_Size(); q++)
+        {
+            //bool to detect repeat prime implicants
+            bool repeated = false;
+            //check if the implicant has the minterm sent to the function
+            if (imp1[y].Get_Indexes(q) == minterm_toadd)
+            {
+                //check if prime implicant vector has size more than 0
+                if (prime_imp.size() > 0)
+                {
+                    //loop over current prime implicants
+                    for (int z = 0; z < prime_imp.size(); z++)
+                    {
+                        //check if prime implicant already exists using their boolean expression
+                        if (prime_imp[z].Get_Boolexp() == imp1[y].Get_Boolexp())
+                        {
+                            //mark repeated as true and stop loop
+                            repeated = true;
+                            q = imp1[y].Get_Indexes_Size();
+                            break;
+                        }
+                    }
+                    //if not repeated then add to prime implicant vector
+                    if (repeated == false)
+                    {
+                        prime_imp.push_back(imp1[y]);
+                    }
+                }
+                else
+                {
+                    //add to prime implicant vector
+                    prime_imp.push_back(imp1[y]);
+                    break;
+                }
+            }
+        }
+    }
+}
 
 //a utility function that uses sort alogrithm
 bool compare_onescount(Implicant& impli1, Implicant& impli2) {
