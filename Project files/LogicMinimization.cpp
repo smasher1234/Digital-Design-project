@@ -18,6 +18,8 @@ vector<Implicant> prime_imp;
 vector<Implicant> ess_prime_imp;
 //a vector which contains all minterm but can be modified to help with finding the minterms that didn't match with any implicant
 vector<int> minterm_copy;
+int get_1_count(string binary);
+
 
 bool is_the_expression_valid(string expression)
 {
