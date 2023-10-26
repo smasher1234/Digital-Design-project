@@ -15,10 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Project files.cpp">
+    <ClCompile Include="Implicant.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Implicant.cpp">
+    <ClCompile Include="LogicMinimization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
