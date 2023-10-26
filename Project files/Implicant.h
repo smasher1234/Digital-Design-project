@@ -16,9 +16,13 @@ private:
 public:
 	//constructor to set the starting Boolean expression and Index of the Implicant
 	Implicant(string& Bool_exp, int Starting_index);
+	//constructor to set only the starting Boolean expression
+	Implicant(string& Bool_exp);
 	//function that returns Bool_expression
 	string Get_Boolexp() { return Bool_expression; };
 	//function that returns value of Indexes vector at position index
 	int Get_Indexes(int index) { return Indexes[index]; };
+	int Get_Indexes_Size() { return Indexes.size(); };
+	void Add_Indexes(int index) { Indexes.push_back(index); };
 };
 
