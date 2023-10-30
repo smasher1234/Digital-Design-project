@@ -408,6 +408,8 @@ void compare_loop_imp()
     //loop over each implicant
     for (int x = 0; x < imp1.size() - 1; x++)
     {
+        //bool to see if implicant is repeated or not
+        bool cancel=false;
         //loop over each implicant again to compare two implicants with each other
         for (int y = x + 1; y < imp1.size(); y++)
         {
@@ -421,8 +423,10 @@ void compare_loop_imp()
             //check if difference in ones is 1, in which case we continue
             if (temp == 1)
             {
-                //check if difference in bits is just 1 number that isn't -
+                //check if difference in bits is just 1 number that isn't '-'
                 if (the_difference_is_one_bit(temp2, temp3) == 1) {
+
+                
                     //set the new_bin to the newly generated implicant by looping over both implicants and on the difference add a '-'
                     for (int i = 0; i < temp2.length(); i++) {
                         if (temp2[i] == temp3[i])
@@ -433,19 +437,37 @@ void compare_loop_imp()
                             new_bin = new_bin + '-';
                         }
                     }
-                    //create a new implicant with the new binary value
-                    Implicant implicant(new_bin);
-                    //add the minterms of both implicants to the newly generated implicant
-                    for (int i = 0; i < imp1[x].Get_Indexes_Size(); i++)
+
+                    //this is a very important loop as it greatly reduces complexity by not adding redundant terms
+                    for (int q = 0; q < imp2.size(); q++)
                     {
-                        implicant.Add_Indexes(imp1[x].Get_Indexes(i));
+                        if (imp2[q].Get_Boolexp() == new_bin)
+                        {
+                            cancel = true;
+                            break;
+                        }
+
                     }
-                    for (int i = 0; i < imp1[y].Get_Indexes_Size(); i++)
+                    //check if implicant already added in a different order then don't add to avoid redundancy
+                    if (cancel == false) 
                     {
-                        implicant.Add_Indexes(imp1[y].Get_Indexes(i));
+                        //create a new implicant with the new binary value
+                        Implicant implicant(new_bin);
+                        //add the minterms of both implicants to the newly generated implicant
+                        for (int i = 0; i < imp1[x].Get_Indexes_Size(); i++)
+                        {
+                            implicant.Add_Indexes(imp1[x].Get_Indexes(i));
+                        }
+                        for (int i = 0; i < imp1[y].Get_Indexes_Size(); i++)
+                        {
+                            implicant.Add_Indexes(imp1[y].Get_Indexes(i));
+                        }
+
+
+
+                        //push the newly generated implicant to a new implicant vector
+                        imp2.push_back(implicant);
                     }
-                    //push the newly generated implicant to a new implicant vector
-                    imp2.push_back(implicant);
                 }
             }
             //since implicants are sorted, once it reaches difference two, that means it will never find matching implicants anymore, so break
@@ -704,7 +726,7 @@ int main()
         for (int x = 0; x < minterms.size(); x++)
         {
             //convert the current minterm (decimal) to its binary representation
-            temp = convert_decimal_to_binary(minterms[x], 2);
+            temp = convert_decimal_to_binary(minterms[x], 8);
 
             //check if the conversion was succesful by checking if the string has the word "Error" or not
             if (temp.find("Error") == string::npos) {
