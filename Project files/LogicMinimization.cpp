@@ -65,7 +65,7 @@ bool is_the_expression_valid(string expression)
     }
     return true; // Expression is valid (no invalid characters or unbalanced parentheses), return true
 }
-vector<vector<int>> compute_the_truth_table(string expression)
+vector<vector<int>> compute_the_truth_table(string expression, vector<char>& inputs)
 {
     vector<vector<int>> truth_table; // Initialize a 2D vector to store the truth table
     vector<char> input_variables; // Initialize a vector to store unique input variables
@@ -129,8 +129,13 @@ vector<vector<int>> compute_the_truth_table(string expression)
         row.push_back(the_result ? 1 : 0); // Append the result (1 or 0) to the row
         truth_table.push_back(row); // Add the row to the truth table
     }
-    cout << "Hello, The Truth Table for your expression is:" << endl;
+    cout << "Hello, The Truth Table for your expression is:" << endl<<endl;
     // Display the truth table
+    for (int i = 0; i < inputs.size(); i++)
+    {
+        cout << inputs[i]<< " ";
+    }
+    cout << "Out" << endl;
     for (int i = 0; i < truth_table.size(); i++)
     {
         for (int j = 0; j < truth_table[i].size(); j++)
@@ -315,13 +320,15 @@ string printMintermsAndMaxterms(vector<int>& minterms, vector<int>& maxterms) {
 
 
 //a function that prints all essential prime implicants
-void print_essential_prime_implicants()
+void print_essential_prime_implicants(vector<char> inputs)
 {
+    string big_exp="";
     //loop over all essential prime implicants and print them
     cout << endl << "Essential Prime Implicants:" << endl << endl;
     for (int x = 0; x < ess_prime_imp.size(); x++) {
         cout << "Minterms are:";
-        for (int q = 0; q < ess_prime_imp[x].Get_Indexes_Size(); q++) {
+        for (int q = 0; q < ess_prime_imp[x].Get_Indexes_Size(); q++) 
+        {
             if ((q + 1) < ess_prime_imp[x].Get_Indexes_Size())
             {
                 cout << ess_prime_imp[x].Get_Indexes(q) << ",";
@@ -333,8 +340,36 @@ void print_essential_prime_implicants()
             //cout << ", which has binary representation: ";
            //cout << convert_decimal_to_binary(ess_prime_imp[x].Get_Indexes(q), ess_prime_imp[x].Get_Boolexp().size()) << "    ";
         }
-        cout << endl << "Binary Rep: " << ess_prime_imp[x].Get_Boolexp() << endl << endl;
+        //check if bool expression of ess prime implicant has a - or a 0 or 1 and print the apropraite boolean expression
+        string boolexp;
+        for (int m = 0; m < ess_prime_imp[x].Get_Boolexp().size(); m++) 
+        {
+            if (ess_prime_imp[x].Get_Boolexp()[m] != '-') 
+            {
+                if (ess_prime_imp[x].Get_Boolexp()[m] == '1') {
+
+                    boolexp = boolexp + inputs[m];
+                }
+                else {                   
+                    boolexp = boolexp + inputs[m];
+                    boolexp = boolexp + '\'';
+                }
+                
+            }
+        }
+        cout << endl << endl << "Boolean expression: " << boolexp << endl << endl;
+        if ((x + 1) < ess_prime_imp.size()) 
+        {
+            big_exp = big_exp + boolexp;
+            big_exp = big_exp + '+';
+        }
+        else 
+        {
+            big_exp = big_exp + boolexp;
+        }
     }
+
+    cout << endl << endl << "The Full Boolean expresion of essential minterms combined together is: " << big_exp << endl;
 }
 //a function that //a function that prints all prime implicants 
 void print_prime_implicants()
@@ -781,8 +816,7 @@ int main()
                 input_data.push_back(c); // Add the unique input variable to the vector
             }
         }
-        vector<vector<int>> truthTable = compute_the_truth_table(logic_expression); // Compute the truth table for the entered expression
-        
+        vector<vector<int>> truthTable = compute_the_truth_table(logic_expression, input_data); // Compute the truth table for the entered expression
         string sopExpression = generate_sum_of_product_SOP_expression(truthTable, input_data); // Generate the Sum of Products (SOP) expression
         cout << "the canonical SOP expression is: " << sopExpression << endl; // Display the SOP expression
         string posExpression = generate_product_of_sum_POS_expression(truthTable, input_data); // Generate the Product of Sum (POS) expression
@@ -795,6 +829,7 @@ int main()
         {
             cout << minterm << " ";
         }
+        
         cout << endl;
         cout << "Maxterms are: ";
 
@@ -804,7 +839,7 @@ int main()
             cout << maxterm << " ";
         }
         cout << endl << endl;
-
+        cout << printMintermsAndMaxterms(minterms, maxterms)<<endl<<endl;
 
 
 
@@ -816,7 +851,7 @@ int main()
         for (int x = 0; x < minterms.size(); x++)
         {
             //convert the current minterm (decimal) to its binary representation
-            temp = convert_decimal_to_binary(minterms[x], 6);
+            temp = convert_decimal_to_binary(minterms[x], input_data.size());
 
             //check if the conversion was succesful by checking if the string has the word "Error" or not
             if (temp.find("Error") == string::npos) {
@@ -833,21 +868,28 @@ int main()
                 return 0;
             }
         }
+        cout << "Implicants and their minterms: "<<endl;
         //use sort algorithm to order the implicant vector imp1 by the number of ones
         sort(imp1.begin(), imp1.end(), compare_onescount);
 
         //output results
         for (int x = 0; x < imp1.size(); x++)
         {
-            cout << imp1[x].Get_Indexes(0) << "," << imp1[x].Get_Boolexp() << endl;
+            cout << imp1[x].Get_Indexes(0) << ",  " << imp1[x].Get_Boolexp() << endl;
         }
-        cout << endl;
+        cout << endl<< "Starting the first column creation..."<<endl;
         compare_loop_imp();
         for (int x = 0; x < imp2.size(); x++) {
             for (int q = 0; q < imp2[x].Get_Indexes_Size(); q++) {
-                cout << imp2[x].Get_Indexes(q) << ",";
+                if ((q + 1) < imp2[x].Get_Indexes_Size())
+                {
+                    cout << imp2[x].Get_Indexes(q) << ",";
+                }
+                else {
+                    cout << imp2[x].Get_Indexes(q);
+                }
             }
-            cout << imp2[x].Get_Boolexp() << endl;
+            cout <<"     "<< imp2[x].Get_Boolexp() << endl;
         }
         check_for_prime();
         cout << endl;
@@ -860,9 +902,15 @@ int main()
             compare_loop_imp();
             for (int x = 0; x < imp2.size(); x++) {
                 for (int q = 0; q < imp2[x].Get_Indexes_Size(); q++) {
-                    cout << imp2[x].Get_Indexes(q) << ",";
+                    if ((q + 1) < imp2[x].Get_Indexes_Size())
+                    {
+                        cout << imp2[x].Get_Indexes(q) << ",";
+                    }
+                    else {
+                        cout << imp2[x].Get_Indexes(q);
+                    }
                 }
-                cout << imp2[x].Get_Boolexp() << endl;
+                cout << "     " << imp2[x].Get_Boolexp() << endl;
             }
             check_for_prime();
             ctr_wave++;
@@ -872,14 +920,13 @@ int main()
 
         print_prime_implicants();
 
-        //get essentail prime implicant
         minterm_copy.insert(minterm_copy.end(), minterms.begin(), minterms.end());
+
         get_essential_prime_implicants();
 
-        print_essential_prime_implicants();
+        print_essential_prime_implicants(input_data);
 
         print_remaining_minterms();
-
 
         set_non_essentail_prime_implicants();
 
