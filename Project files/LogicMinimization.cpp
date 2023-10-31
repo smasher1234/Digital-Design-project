@@ -340,6 +340,7 @@ void print_essential_prime_implicants(vector<char> inputs)
             //cout << ", which has binary representation: ";
            //cout << convert_decimal_to_binary(ess_prime_imp[x].Get_Indexes(q), ess_prime_imp[x].Get_Boolexp().size()) << "    ";
         }
+        cout << endl << "Binary Rep: " << ess_prime_imp[x].Get_Boolexp();
         //check if bool expression of ess prime implicant has a - or a 0 or 1 and print the apropraite boolean expression
         string boolexp;
         for (int m = 0; m < ess_prime_imp[x].Get_Boolexp().size(); m++) 
@@ -369,7 +370,7 @@ void print_essential_prime_implicants(vector<char> inputs)
         }
     }
 
-    cout << endl << endl << "The Full Boolean expresion of essential minterms combined together is: " << big_exp << endl;
+    cout << endl << endl << "The Full Boolean expression of essential minterms combined together is: " << big_exp << endl<<endl;
 }
 //a function that //a function that prints all prime implicants 
 void print_prime_implicants()
@@ -797,6 +798,208 @@ int get_1_count(string binary) {
     }
     return counter;
 }
+
+
+
+
+
+
+
+
+
+
+void generateKMap(int numVariables, const vector<int>& minterms)
+{
+
+    int numRows = 0;
+    int numCols = 0;
+
+    if (numVariables == 1)
+    {
+        numRows = 1;
+        numCols = 1;
+    }
+
+    else if (numVariables == 2)
+    {
+        numRows = 2;
+        numCols = 2;
+    }
+
+    else if (numVariables == 3)
+    {
+        numRows = 2;
+        numCols = 4;
+    }
+
+    else if (numVariables == 4)
+    {
+        numRows = 4;
+        numCols = 4;
+    }
+
+    else
+    {
+        cout << "number of variables is more than four.";
+        return;
+    }
+
+    vector<vector<int>> kMap(numRows, vector<int>(numCols, -1));
+
+    if (numVariables == 1 || numVariables == 2)
+    {
+        for (int minterm : minterms)
+        {
+            int row = minterm / numCols;
+            int col = minterm % numCols;
+            kMap[row][col] = minterm;
+        }
+
+    }
+
+    else
+    {
+        for (int minterm : minterms)
+        {
+            if (minterm == 0)
+            {
+                int row = 0;
+                int col = 0;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 1)
+            {
+                int row = 0;
+                int col = 1;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 2)
+            {
+                int row = 0;
+                int col = 3;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 3)
+            {
+                int row = 0;
+                int col = 2;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 4)
+            {
+                int row = 1;
+                int col = 0;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 5)
+            {
+                int row = 1;
+                int col = 1;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 6)
+            {
+                int row = 1;
+                int col = 3;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 7)
+            {
+                int row = 1;
+                int col = 2;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 8)
+            {
+                int row = 3;
+                int col = 0;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 9)
+            {
+                int row = 3;
+                int col = 1;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 10)
+            {
+                int row = 3;
+                int col = 3;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 11)
+            {
+                int row = 3;
+                int col = 2;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 12)
+            {
+                int row = 2;
+                int col = 0;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 13)
+            {
+                int row = 2;
+                int col = 1;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 14)
+            {
+                int row = 2;
+                int col = 3;
+                kMap[row][col] = minterm;
+            }
+
+            if (minterm == 15)
+            {
+                int row = 2;
+                int col = 2;
+                kMap[row][col] = minterm;
+            }
+        }
+    }
+
+    cout << "K Map:\n";
+
+    for (int i = 0; i < numRows; ++i)
+    {
+        for (int j = 0; j < numCols; ++j)
+        {
+            if (kMap[i][j] != -1)
+            {
+                cout << "1" << " ";
+            }
+            else
+            {
+                cout << "0 ";
+            }
+        }
+        cout << "\n";
+    }
+}
+
+
+
+
+
+
+
 int main()
 {
     string logic_expression; // Declare a string to store the user's input boolean expression
@@ -932,6 +1135,8 @@ int main()
 
         print_non_essentail_prime_implicants();
 
+
+        generateKMap(input_data.size(),minterms);
     }
     else
     {
