@@ -782,24 +782,7 @@ int main()
             }
         }
         vector<vector<int>> truthTable = compute_the_truth_table(logic_expression); // Compute the truth table for the entered expression
-        cout << "the truth table of the entered boolean expression is:" << endl;
-        // Display the truth table
-        for (int i = 0; i < truthTable.size(); i++)
-        {
-            for (int j = 0; j < truthTable[i].size(); j++)
-            {
-                if (truthTable[i][j] == -1)
-                {
-                    cout << "-";
-                }
-                else
-                {
-                    cout << truthTable[i][j];
-                }
-                cout << " ";
-            }
-            cout << endl;
-        }
+        
         string sopExpression = generate_sum_of_product_SOP_expression(truthTable, input_data); // Generate the Sum of Products (SOP) expression
         cout << "the canonical SOP expression is: " << sopExpression << endl; // Display the SOP expression
         string posExpression = generate_product_of_sum_POS_expression(truthTable, input_data); // Generate the Product of Sum (POS) expression
