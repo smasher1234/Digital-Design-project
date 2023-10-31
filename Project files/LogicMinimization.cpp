@@ -85,7 +85,7 @@ vector<vector<int>> compute_the_truth_table(string expression)
     for (int i = 0; i < number_of_rows; i++)
     {
         vector<int> row; // Initialize a vector to represent a row in the truth table
-        bitset<8> bits(i); // Convert the row index to binary
+        bitset<10> bits(i); // Convert the row index to binary
         int j = 0;
         for (char ch : input_variables)
         {
@@ -229,7 +229,7 @@ vector<int> generate_the_minterms(vector<vector<int>>& truth_table)
         if (truth_table[i].back() == 1) // Check if the output is true (1) for the current row
         {
             // Convert the binary representation of the row index to an integer and add it to the list of minterms
-            int mint = convert_binary_string_to_integer(bitset<8>(i).to_string());
+            int mint = convert_binary_string_to_integer(bitset<10>(i).to_string());
             mints.push_back(mint);
         }
     }
@@ -244,7 +244,7 @@ vector<int> generate_the_maxterms(vector<vector<int>>& truth_table)
         if (truth_table[i].back() == 0) // Check if the output is false (0) for the current row
         {
             // Convert the binary representation of the row index to an integer and add it to the list of maxterms
-            int maxt = convert_binary_string_to_integer(bitset<8>(i).to_string());
+            int maxt = convert_binary_string_to_integer(bitset<10>(i).to_string());
             maxts.push_back(maxt);
         }
     }
@@ -271,7 +271,7 @@ string printBinaryRepresentation(string expression, vector<char>& input_variable
             // Find the index of this variable in the input variable list
             int index = find(input_variables.begin(), input_variables.end(), character_c) - input_variables.begin();
             // Create an 8-bit bitset with all bits set to 0
-            bitset<8> bits(0);
+            bitset<10> bits(0);
             // Set the bit at the corresponding index to 1
             bits[7 - index] = 1;
             binaryRepresentation += bits.to_string() + " ";  // Add the binary representation to the string
@@ -296,13 +296,13 @@ string printMintermsAndMaxterms(vector<int>& minterms, vector<int>& maxterms) {
 
     for (int mint : minterms) {
         // Convert the minterm (an integer) to an 8-bit binary representation
-        bitset<8> bits(mint);
+        bitset<10> bits(mint);
         binaryMinterms += bits.to_string() + " ";  // Add the binary representation to the string
     }
 
     for (int maxt : maxterms) {
         // Convert the maxterm (an integer) to an 8-bit binary representation
-        bitset<8> bits(maxt);
+        bitset<10> bits(maxt);
         binaryMaxterms += bits.to_string() + " ";  // Add the binary representation to the string
     }
 
