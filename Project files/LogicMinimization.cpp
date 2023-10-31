@@ -812,7 +812,7 @@ int get_1_count(string binary) {
 
 void generateKMap(int numVariables, const vector<int>& minterms)
 {
-
+    // This part determines the number of rows and columns needed based on the number of variables.
     int numRows = 0;
     int numCols = 0;
 
@@ -858,7 +858,7 @@ void generateKMap(int numVariables, const vector<int>& minterms)
         }
 
     }
-
+    // This part determines the spot of each minterm
     else
     {
         for (int minterm : minterms)
@@ -976,7 +976,8 @@ void generateKMap(int numVariables, const vector<int>& minterms)
             }
         }
     }
-
+    
+    // This part prints the kmap.
     cout << "K Map:\n";
 
     for (int i = 0; i < numRows; ++i)
@@ -1035,6 +1036,15 @@ int main()
                 input_data.push_back(c); // Add the unique input variable to the vector
             }
         }
+
+        //check if the input is more than 10 variables.
+
+        if (input_data.size() > 10)
+        {
+            cout << "Input is more than 10 variables.";
+            return 0;
+        }
+
         vector<vector<int>> truthTable = compute_the_truth_table(logic_expression, input_data); // Compute the truth table for the entered expression
         string sopExpression = generate_sum_of_product_SOP_expression(truthTable, input_data); // Generate the Sum of Products (SOP) expression
         cout << "the canonical SOP expression is: " << sopExpression << endl; // Display the SOP expression
