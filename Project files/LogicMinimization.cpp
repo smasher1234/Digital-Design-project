@@ -399,6 +399,7 @@ void print_remaining_minterms()
 {
     if (minterm_copy.size() == 0)
     {
+        cout << endl << "There are no remaining minterms";
         return;
     }
     //loop over remainig minterms and print them
@@ -460,6 +461,7 @@ void print_non_essentail_prime_implicants()
 {
     if (non_ess_prime_imp.size() == 0)
     {
+        cout << endl << "There are no non-essential prime implicants";
         return;
     }
     //loop over remainig non essential prime implicants and print them
@@ -999,7 +1001,21 @@ void generateKMap(int numVariables, const vector<int>& minterms)
 
 
 
-
+void seperate_print() 
+{
+    for (int x = 0; x < imp2.size(); x++) {
+        for (int q = 0; q < imp2[x].Get_Indexes_Size(); q++) {
+            if ((q + 1) < imp2[x].Get_Indexes_Size())
+            {
+                cout << imp2[x].Get_Indexes(q) << ",";
+            }
+            else {
+                cout << imp2[x].Get_Indexes(q);
+            }
+        }
+        cout << "     " << imp2[x].Get_Boolexp() << endl;
+    }
+}
 int main()
 {
     string logic_expression; // Declare a string to store the user's input boolean expression
@@ -1081,46 +1097,28 @@ int main()
             cout << imp1[x].Get_Indexes(0) << ",  " << imp1[x].Get_Boolexp() << endl;
         }
         cout << endl<< "Starting the first column creation..."<<endl;
+        //call function to adjust groups
         compare_loop_imp();
-        for (int x = 0; x < imp2.size(); x++) {
-            for (int q = 0; q < imp2[x].Get_Indexes_Size(); q++) {
-                if ((q + 1) < imp2[x].Get_Indexes_Size())
-                {
-                    cout << imp2[x].Get_Indexes(q) << ",";
-                }
-                else {
-                    cout << imp2[x].Get_Indexes(q);
-                }
-            }
-            cout <<"     "<< imp2[x].Get_Boolexp() << endl;
-        }
+        seperate_print();
         check_for_prime();
         cout << endl;
         int ctr_wave = 1;
         cout << "Wave 1 comparision finished" << endl << endl;
         while (imp2.size() > 0)
         {
+            //a while loop until no new column is formed
             imp1.clear();
             imp1.insert(imp1.end(), imp2.begin(), imp2.end());
             compare_loop_imp();
-            for (int x = 0; x < imp2.size(); x++) {
-                for (int q = 0; q < imp2[x].Get_Indexes_Size(); q++) {
-                    if ((q + 1) < imp2[x].Get_Indexes_Size())
-                    {
-                        cout << imp2[x].Get_Indexes(q) << ",";
-                    }
-                    else {
-                        cout << imp2[x].Get_Indexes(q);
-                    }
-                }
-                cout << "     " << imp2[x].Get_Boolexp() << endl;
-            }
+
+            seperate_print();
+
             check_for_prime();
             ctr_wave++;
             cout << endl;
             cout << "Wave " << ctr_wave << " comparision finished" << endl << endl;
         }
-
+        //function calls to do the neccessary stuff
         print_prime_implicants();
 
         minterm_copy.insert(minterm_copy.end(), minterms.begin(), minterms.end());
