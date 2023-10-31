@@ -26,6 +26,11 @@ string convert_decimal_to_binary(int decimal, int length);
 
 bool is_the_expression_valid(string expression)
 {
+    //detect if number of variables is 0
+    if (expression.size() == 0)
+    {
+        return false;
+    }
     int the_open_parentheses = 0; // Initialize a count for open parentheses
     for (char character_c : expression)
     {
@@ -270,36 +275,62 @@ void print_essential_prime_implicants()
     //loop over all essential prime implicants and print them
     cout << endl << "Essential Prime Implicants:" << endl << endl;
     for (int x = 0; x < ess_prime_imp.size(); x++) {
+        cout << "Minterms are:";
         for (int q = 0; q < ess_prime_imp[x].Get_Indexes_Size(); q++) {
-            cout << ess_prime_imp[x].Get_Indexes(q) << ",";
-             //cout << ", which has binary representation: ";
-            //cout << convert_decimal_to_binary(ess_prime_imp[x].Get_Indexes(q), ess_prime_imp[x].Get_Boolexp().size()) << "    ";
+            if ((q + 1) < ess_prime_imp[x].Get_Indexes_Size())
+            {
+                cout << ess_prime_imp[x].Get_Indexes(q) << ",";
+            }
+            else
+            {
+                cout << ess_prime_imp[x].Get_Indexes(q);
+            }
+            //cout << ", which has binary representation: ";
+           //cout << convert_decimal_to_binary(ess_prime_imp[x].Get_Indexes(q), ess_prime_imp[x].Get_Boolexp().size()) << "    ";
         }
-        cout << endl << "Binary Rep: " << ess_prime_imp[x].Get_Boolexp() << endl;
+        cout << endl << "Binary Rep: " << ess_prime_imp[x].Get_Boolexp() << endl << endl;
     }
 }
 //a function that //a function that prints all prime implicants 
 void print_prime_implicants()
-{   
+{
     //loop over all prime implicants and print them
     cout << "Prime Implicants:" << endl << endl;
     for (int x = 0; x < prime_imp.size(); x++) {
+        cout << "Minterms are:";
         for (int q = 0; q < prime_imp[x].Get_Indexes_Size(); q++) {
-            cout << prime_imp[x].Get_Indexes(q) << ",";
+            if ((q + 1) < prime_imp[x].Get_Indexes_Size())
+            {
+                cout << prime_imp[x].Get_Indexes(q) << ",";
+            }
+            else
+            {
+                cout << prime_imp[x].Get_Indexes(q);
+            }
             //cout << ", which has binary representation: ";
             //cout << convert_decimal_to_binary(prime_imp[x].Get_Indexes(q), prime_imp[x].Get_Boolexp().size()) << "    ";
         }
-        cout << endl << "Binary Rep: " << prime_imp[x].Get_Boolexp() << endl;
+        cout << endl << "Binary Rep: " << prime_imp[x].Get_Boolexp() << endl << endl;
     }
 }
 //a function that prints all remaining minterms after extracting essential prime implicants
 void print_remaining_minterms()
 {
+    if (minterm_copy.size() == 0)
+    {
+        return;
+    }
     //loop over remainig minterms and print them
-    cout << endl << "Remaining minterms are: ";
     for (int x = 0; x < minterm_copy.size(); x++)
     {
-        cout << "Binary Rep:" << minterm_copy[x] << ",";
+        if ((x + 1) < minterm_copy.size())
+        {
+            cout << "Binary Rep:" << minterm_copy[x] << ",";
+        }
+        else
+        {
+            cout << "Binary Rep:" << minterm_copy[x];
+        }
     }
 }
 //a function that set all nonessential prime implicants based on the currnet prime implicants and essential prime implicants
@@ -308,6 +339,25 @@ void set_non_essentail_prime_implicants()
     //loop over all prime implicants
     for (int y = 0; y < prime_imp.size(); y++)
     {
+        bool extracted = true;
+        //check if the minterms of that implicant havn't been already extract by essentials in which it isn't essentail or non essentail  
+        for (int q = 0; q < prime_imp[y].Get_Indexes_Size(); q++)
+        {
+            for (int b = 0; b < minterm_copy.size(); b++)
+            {
+                //if there exists a single minterm that exists in remaining minterms vector then it hasn't been extracted and could be essentail
+                if (minterm_copy[b] == prime_imp[y].Get_Indexes(q))
+                {
+                    //it hasn't been extracted yet
+                    extracted = false;
+                }
+            }
+        }
+        //skip current loop iteration if it has been already extracted
+        if (extracted == true)
+        {
+            continue;
+        }
         //loop over all essential prime implicants
         for (int x = 0; x < ess_prime_imp.size(); x++)
         {
@@ -326,16 +376,28 @@ void set_non_essentail_prime_implicants()
 }
 //a function that prints all non essential prime implicants
 void print_non_essentail_prime_implicants()
-{  
+{
+    if (non_ess_prime_imp.size() == 0)
+    {
+        return;
+    }
     //loop over remainig non essential prime implicants and print them
     cout << endl << "Non Essentail Prime Implicants:" << endl << endl;
     for (int x = 0; x < non_ess_prime_imp.size(); x++) {
+        cout << "Minterms are:";
         for (int q = 0; q < non_ess_prime_imp[x].Get_Indexes_Size(); q++) {
-            cout << non_ess_prime_imp[x].Get_Indexes(q) <<",";
-             //cout << ", which has binary representation: ";
-            //cout << convert_decimal_to_binary(non_ess_prime_imp[x].Get_Indexes(q), non_ess_prime_imp[x].Get_Boolexp().size()) << "    ";
+            if ((q + 1) < non_ess_prime_imp[x].Get_Indexes_Size())
+            {
+                cout << non_ess_prime_imp[x].Get_Indexes(q) << ",";
+            }
+            else
+            {
+                cout << non_ess_prime_imp[x].Get_Indexes(q);
+            }
+            //cout << ", which has binary representation: ";
+           //cout << convert_decimal_to_binary(non_ess_prime_imp[x].Get_Indexes(q), non_ess_prime_imp[x].Get_Boolexp().size()) << "    ";
         }
-        cout << endl << "Binary Rep: " << non_ess_prime_imp[x].Get_Boolexp() << endl;
+        cout << endl << "Binary Rep: " << non_ess_prime_imp[x].Get_Boolexp() << endl << endl;
     }
 }
 
@@ -409,7 +471,7 @@ void compare_loop_imp()
     for (int x = 0; x < imp1.size() - 1; x++)
     {
         //bool to see if implicant is repeated or not
-        bool cancel=false;
+        bool cancel = false;
         //loop over each implicant again to compare two implicants with each other
         for (int y = x + 1; y < imp1.size(); y++)
         {
@@ -426,7 +488,7 @@ void compare_loop_imp()
                 //check if difference in bits is just 1 number that isn't '-'
                 if (the_difference_is_one_bit(temp2, temp3) == 1) {
 
-                
+
                     //set the new_bin to the newly generated implicant by looping over both implicants and on the difference add a '-'
                     for (int i = 0; i < temp2.length(); i++) {
                         if (temp2[i] == temp3[i])
@@ -449,7 +511,7 @@ void compare_loop_imp()
 
                     }
                     //check if implicant already added in a different order then don't add to avoid redundancy
-                    if (cancel == false) 
+                    if (cancel == false)
                     {
                         //create a new implicant with the new binary value
                         Implicant implicant(new_bin);
@@ -726,7 +788,7 @@ int main()
         for (int x = 0; x < minterms.size(); x++)
         {
             //convert the current minterm (decimal) to its binary representation
-            temp = convert_decimal_to_binary(minterms[x], 8);
+            temp = convert_decimal_to_binary(minterms[x], 6);
 
             //check if the conversion was succesful by checking if the string has the word "Error" or not
             if (temp.find("Error") == string::npos) {
@@ -794,7 +856,7 @@ int main()
         set_non_essentail_prime_implicants();
 
         print_non_essentail_prime_implicants();
-        
+
     }
     else
     {
@@ -802,4 +864,3 @@ int main()
     }
     return 0; // Return 0 to indicate successful program execution
 }
-
