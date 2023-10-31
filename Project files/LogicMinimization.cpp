@@ -262,7 +262,52 @@ int merge_the_minterms(int mint_1, int mint_2)
     }
     return done_merged; // Return the merged minterm with differing bits combined
 }
+// Function to print the binary representation of the user input boolean expression
+string printBinaryRepresentation(string expression, vector<char>& input_variables) {
+    string binaryRepresentation = "";
+    for (char character_c : expression) {
+        if (isalpha(character_c) || character_c == '\'') {
+            // If the character is an alphabet or a prime (') symbol, it represents an input variable
+            // Find the index of this variable in the input variable list
+            int index = find(input_variables.begin(), input_variables.end(), character_c) - input_variables.begin();
+            // Create an 8-bit bitset with all bits set to 0
+            bitset<8> bits(0);
+            // Set the bit at the corresponding index to 1
+            bits[7 - index] = 1;
+            binaryRepresentation += bits.to_string() + " ";  // Add the binary representation to the string
+        }
+        else if (character_c == '+') {
+            binaryRepresentation += "+ ";  // If the character is '+', add it to the string
+        }
+        else if (character_c == ' ') {
+            binaryRepresentation += "  ";  // If the character is a space, add two spaces to the string
+        }
+        else {
+            binaryRepresentation += character_c;  // Add other characters (operators) to the string
+        }
+    }
+    return binaryRepresentation;
+}
 
+// Function to print the binary representation of minterms and maxterms
+string printMintermsAndMaxterms(vector<int>& minterms, vector<int>& maxterms) {
+    string binaryMinterms = "Binary Representation of Minterms:\n";
+    string binaryMaxterms = "Binary Representation of Maxterms:\n";
+
+    for (int mint : minterms) {
+        // Convert the minterm (an integer) to an 8-bit binary representation
+        bitset<8> bits(mint);
+        binaryMinterms += bits.to_string() + " ";  // Add the binary representation to the string
+    }
+
+    for (int maxt : maxterms) {
+        // Convert the maxterm (an integer) to an 8-bit binary representation
+        bitset<8> bits(maxt);
+        binaryMaxterms += bits.to_string() + " ";  // Add the binary representation to the string
+    }
+
+    return binaryMinterms + "\n" + binaryMaxterms;
+}
 
 
 
